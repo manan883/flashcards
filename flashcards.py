@@ -1,5 +1,7 @@
-from sys import *
-from os import *
+from sys import exit
+from os import getcwd
+from os import path
+from os import makedirs
 '''
 ask user to enter question and answer
 put in a map
@@ -14,9 +16,17 @@ def makedir(name):
         makedirs(final_directory)
     else:
         return False
-def writeToFile(dataDict):
-    for i,j in zip(dataDict["questions"], dataDict["answers"]):
-        print(i + "," + j)
+def writeToFile(name,dataDict):
+    fn = str(name + ".txt")
+    try:
+        
+        f = open(fn,"x")
+    except:
+        pass
+    ap = open(fn,"a")
+    for i,j in zip(dataDict["questions"], dataDict["answers"] + "\n"):
+        ap.write(i + "," + j)
+        #print(i + "," + j)
     pass
 def newSet(name):
     newSetDic = {
@@ -41,7 +51,7 @@ def newSet(name):
                 newSetDic["answers"].append(aw)
                 print(newSetDic)
             case "B":
-                writeToFile(newSetDic)
+                writeToFile(name,newSetDic)
                 break
             case _:
                 print("Choose A or B")
