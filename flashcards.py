@@ -14,7 +14,9 @@ def makedir(name):
         makedirs(final_directory)
     else:
         return False
-def writeToFile(fileName,dataDict):
+def writeToFile(dataDict):
+    for i,j in zip(dataDict["questions"], dataDict["answers"]):
+        print(i + "," + j)
     pass
 def newSet(name):
     newSetDic = {
@@ -39,7 +41,10 @@ def newSet(name):
                 newSetDic["answers"].append(aw)
                 print(newSetDic)
             case "B":
+                writeToFile(newSetDic)
                 break
+            case _:
+                print("Choose A or B")
         
 
 def inputs():
