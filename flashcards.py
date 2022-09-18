@@ -2,6 +2,7 @@ from sys import exit
 from os import getcwd
 from os import path
 from os import makedirs
+import random
 '''
 ask user to enter question and answer
 put in a map
@@ -9,13 +10,15 @@ store question and answer in a csv file with a , as a seperator
 when quizzing user the comma as a parse tool and move the data from the csv file into a map when launching.
 
 '''
-def makedir(name):
-    current_directory = getcwd()
-    final_directory = path.join(current_directory, name)
-    if not path.exists(final_directory):
-        makedirs(final_directory)
-    else:
-        return False
+universalD = {'\**/': []
+    }
+# def makedir(name):
+#     current_directory = getcwd()
+#     final_directory = path.join(current_directory, name)
+#     if not path.exists(final_directory):
+#         makedirs(final_directory)
+#     else:
+#         return False
 def writeToFile(name,dataDict):
     fn = str(name + "_data.txt")
     try:
@@ -64,12 +67,25 @@ def studySet(name):
     try:
         fn = name + "_data.txt"
         f = open(fn,"r")
-        # value = f.readline()
-        # print(value)
         arr = []
         for x in f:
             arr.append(x)
-        print(arr)    
+        print("The questions will show up one at a time, press Q at any time to quit")
+        
+        for i in arr:
+            temp = i.split(",")
+            universalD[temp[0]] = temp[1]
+        random.shuffle(arr)
+        for i in arr:
+            temp = i.split(",")
+            print("Question:",temp[0])
+            inp = input()
+            match inp.upper():
+                case "Q":
+                    break
+                case _:
+                    pass
+            print("The answer to:",temp[0],"is",universalD[temp[0]])
     except:
         print("Set does not exist, would you like to make a new set with this name? Y/N ")
         usi = input()
