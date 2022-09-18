@@ -17,15 +17,15 @@ def makedir(name):
     else:
         return False
 def writeToFile(name,dataDict):
-    fn = str(name + ".txt")
+    fn = str(name + "_data.txt")
     try:
         
         f = open(fn,"x")
     except:
         pass
     ap = open(fn,"a")
-    for i,j in zip(dataDict["questions"], dataDict["answers"] + "\n"):
-        ap.write(i + "," + j)
+    for i,j in zip(dataDict["questions"], dataDict["answers"]):
+        ap.write(i + "," + j + "\n")
         #print(i + "," + j)
     pass
 def newSet(name):
@@ -33,10 +33,6 @@ def newSet(name):
         "questions": [],
         "answers": []
     }
-    val = makedir(name)
-    if val == False:
-        print("directory exists already")
-        return 
     while True:
         ipt = input("A: Enter a question you want to add to the library:\nB: quit\n")
         match ipt.upper():
@@ -56,17 +52,48 @@ def newSet(name):
             case _:
                 print("Choose A or B")
         
+def append(name):
+    try:
+        f = open(name,"a")
+        newSet(name)
+    except:
+        print("File does not exist, making a new one")
 
+        newSet(name)
+def studySet(name):
+    try:
+        fn = name + "_data.txt"
+        f = open(fn,"r")
+        # value = f.readline()
+        # print(value)
+        arr = []
+        for x in f:
+            arr.append(x)
+        print(arr)    
+    except:
+        print("Set does not exist, would you like to make a new set with this name? Y/N ")
+        usi = input()
+        match usi.upper():
+            case "Y":
+                newSet(name)
+            case "N":
+                return
+            case _:
+                print("Type Y or N")
 def inputs():
     while True:
-        userInput = input("Select and option:\nA: new set of cards\nB:study and old set\nC:update and old set\nQ: quit\n")
+        userInput = input("Select and option:\nA:new set of cards\nB:study an old set\nC:update an old set\nQ: quit\n")
         match userInput.upper():
             case "A":
-                newSet("name")
+                n = input("Enter the name of this new set, if set already exists the data will be appended to the existing file: ")
+                newSet(n)
             case "B":
-                print
+                nme = input("Enter the set you want to study: ")
+                studySet(nme)
+                
             case "C":
-                print
+                nm = input("Enter the name of the set you want to append to: ")
+                append(nm)
             case "Q":
                 exit()
             case _:
