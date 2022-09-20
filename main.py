@@ -1,6 +1,8 @@
 #gui
 # import flashcards
 from email import message
+from genericpath import exists
+from ssl import Options
 import tkinter as tk
 from tkinter import *
 import tkinter.simpledialog
@@ -22,39 +24,70 @@ def writeToFile(name,dataDict):
         ap.write(i + "," + j + "\n")
         #print(i + "," + j)
     pass
-def newSet():
-    name = tkinter.simpledialog.askstring(title="Flashcards",prompt="Enter the name of the new set: ",parent=root)
-    newSetDic = {
+def addQuestions(name):
+        newSetDic = {
         "questions": [],
         "answers": []
     }
-    while True:
-        ipt = tkinter.simpledialog.askstring(title="Flashcards",prompt="A: Enter a question you want to add to the library:\nB: quit",parent=root)
-        match ipt.upper():
-            case "A":
-                qt = ""
-                while qt == "" or None:                    
-                    qt = tkinter.simpledialog.askstring(title="Flashcards",prompt="Enter the question",parent=root)
-                    if qt == "" or None:
-                        tkinter.messagebox.showerror(title="Flashcards",message="Question can not be empty")
-                    if qt != "" or None:
-                        newSetDic["questions"].append(qt)
-                aw = ""
-                while aw == "" or None:               
-                    aw = tkinter.simpledialog.askstring(title="Flashcards",prompt="Enter the answer to the question")
-                    if aw == "" or None:
-                        tkinter.messagebox.showerror(title="Flashcards",message="Answer can not be empty")
-                    if aw != "" or None:
-                        newSetDic["answers"].append(aw)
-            case "B":
-                writeToFile(name,newSetDic)
-                break
+        while True:
+            ipt = tkinter.simpledialog.askstring(title="Flashcards",prompt="A: Enter a question you want to add to the library:\nB: quit",parent=root)
+            match ipt.upper():
+                case "A":
+                    qt = ""
+                    while qt == "" or None:                    
+                        qt = tkinter.simpledialog.askstring(title="Flashcards",prompt="Enter the question",parent=root)
+                        if qt == "" or None:
+                            tkinter.messagebox.showerror(title="Flashcards",message="Question can not be empty")
+                        if qt != "" or None:
+                            newSetDic["questions"].append(qt)
+                    aw = ""
+                    while aw == "" or None:               
+                        aw = tkinter.simpledialog.askstring(title="Flashcards",prompt="Enter the answer to the question")
+                        if aw == "" or None:
+                            tkinter.messagebox.showerror(title="Flashcards",message="Answer can not be empty")
+                        if aw != "" or None:
+                            newSetDic["answers"].append(aw)
+                case "B":
+                    writeToFile(name,newSetDic)
+                    break
+def deleteSet(name):
+    try:
+        fn = name + "_data.txt"
+        os.remove(fn)
+    except:
+        tkinter.messagebox.showinfo(message="File does not exist")
+def newSet():
+        name = tkinter.simpledialog.askstring(title="Flashcards",prompt="Enter the name of the new set: ",parent=root)
+        fn = name + "_data.txt"
+        if exists(fn):
+            dat = False
+            dat = tkinter.messagebox.askyesno(title="Flashcards",message="Set already exists: do you want to replace it? ")
+            if dat == False:
+                tkinter.messagebox.showinfo(title="Flashcards",message="The new data will be added to the set")
+                addQuestions(name)
+            else:
+                deleteSet(name)
+                addQuestions(name)
+        else:
+            addQuestions(name)
+def appendO():
+    try:
+        name = tkinter.simpledialog.askstring(title="Append",prompt="Enter the name of the set you want to append to")
+        fn = name + "_data.txt"
+        f = open(fn,"a")
+        addQuestions(name)
+    except:
+        pass
+
+
 def pg2():
     root.withdraw()
     options = tk.Tk()
     options.title("Flashcards")
     nS = Button(options,text="Make a new set",font=("Times",15),command=newSet)
     nS.grid(row = 1,column= 1)
+    aO = Button(options,text="Append to an old set",font=("Times",15),command=appendO)
+    aO.grid(row = 2, column= 2)
 def mainpg():
     root.title("Flashcards")
     root.geometry('500x500')
