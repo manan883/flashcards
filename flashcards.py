@@ -96,9 +96,24 @@ def studySet(name):
                 return
             case _:
                 print("Type Y or N")
+def listData(setName):
+    try:
+        fn = setName + "_data.txt"
+        f = open(fn,"r")
+        print(f.read())
+    except:
+        print("Set does not exist, would you like to make a new set with this name? Y/N ")
+        usi = input()
+        match usi.upper():
+            case "Y":
+                newSet(setName)
+            case "N":
+                return
+            case _:
+                print("Type Y or N")
 def inputs():
     while True:
-        userInput = input("Select and option:\nA:new set of cards\nB:study an old set\nC:update an old set\nQ: quit\n")
+        userInput = input("Select and option:\nA:new set of cards\nB:study an old set\nC:update an old set\nD:Show the contents of a set\nQ: quit\n")
         match userInput.upper():
             case "A":
                 n = input("Enter the name of this new set, if set already exists the data will be appended to the existing file: ")
@@ -110,6 +125,9 @@ def inputs():
             case "C":
                 nm = input("Enter the name of the set you want to append to: ")
                 append(nm)
+            case "D":
+                nm = input("Enter the set you want to see the contents of: ")
+                listData(nm)
             case "Q":
                 exit()
             case _:
