@@ -101,6 +101,12 @@ def studySet():
         tkinter.messagebox.showinfo(title="Flashcards",message="The questions will show up one at a time")
         for i in arr:
             temp = i.split(",")
+            #do a yes no and on the bottom ask the user to continue 
+            yesno = tkinter.messagebox.askyesno(title="Questions",message=("Question\n" + temp[0] + "\nDo you wish to continue"))
+            if yesno == True:
+                pass
+            elif yesno == False:
+                break
             print("Question:",temp[0])
             inp = input()
             match inp.upper():
