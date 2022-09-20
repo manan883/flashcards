@@ -5,12 +5,16 @@ from genericpath import exists
 from ssl import Options
 import tkinter as tk
 from tkinter import *
+from tkinter import dialog
 import tkinter.simpledialog
 from tkinter.simpledialog import *
 import os
+import sys 
 from turtle import title
+import random
 root = Tk()
-
+universalD = {'\**/': []
+}
 
 def writeToFile(name,dataDict):
     fn = str(name + "_data.txt")
@@ -42,7 +46,7 @@ def addQuestions(name):
                             newSetDic["questions"].append(qt)
                     aw = ""
                     while aw == "" or None:               
-                        aw = tkinter.simpledialog.askstring(title="Flashcards",prompt="Enter the answer to the question")
+                        aw = tkinter.simpledialog.askstring(title="Flashcards",prompt="Enter the answer to the question:\n" + qt)
                         if aw == "" or None:
                             tkinter.messagebox.showerror(title="Flashcards",message="Answer can not be empty")
                         if aw != "" or None:
@@ -71,23 +75,63 @@ def newSet():
         else:
             addQuestions(name)
 def appendO():
-    try:
         name = tkinter.simpledialog.askstring(title="Append",prompt="Enter the name of the set you want to append to")
         fn = name + "_data.txt"
-        f = open(fn,"a")
-        addQuestions(name)
+        if not(exists(fn)):
+            val = tkinter.messagebox.askyesno(message="Set does not exist, do you want to make a new one?")
+            if val == True:
+                addQuestions(name)
+        elif exists(fn):
+            f = open(fn,"a")
+            addQuestions(name)
+def studySet():
+    name = tkinter.simpledialog.askstring(prompt="Enter the name of the set you want to study")
+    try:
+        fn = name + "_data.txt"
+        f = open(fn,"r")
+        arr = []
+        for x in f:
+            arr.append(x)
+        
+        for i in arr:
+            temp = i.split(",")
+            universalD[temp[0]] = temp[1]
+        random.shuffle(arr)
+        print("The questions will show up one at a time, press Q at any time to quit")
+        tkinter.messagebox.showinfo(title="Flashcards",message="The questions will show up one at a time")
+        for i in arr:
+            temp = i.split(",")
+            print("Question:",temp[0])
+            inp = input()
+            match inp.upper():
+                case "Q":
+                    break
+                case _:
+                    pass
+            print("The answer to:",temp[0],"is",universalD[temp[0]])
     except:
-        pass
+        print("Set does not exist, would you like to make a new set with this name? Y/N ")
+        usi = input()
+        match usi.upper():
+            case "Y":
+                newSet(name)
+            case "N":
+                return
+            case _:
+                print("Type Y or N")
+        
 
 
 def pg2():
     root.withdraw()
-    options = tk.Tk()
-    options.title("Flashcards")
-    nS = Button(options,text="Make a new set",font=("Times",15),command=newSet)
+    option = tk.Tk()
+    option.title("Flashcards")
+    nS = Button(option,text="Make a new set",font=("Times",15),command=newSet)
     nS.grid(row = 1,column= 1)
-    aO = Button(options,text="Append to an old set",font=("Times",15),command=appendO)
+    aO = Button(option,text="Append to an old set",font=("Times",15),command=appendO)
     aO.grid(row = 2, column= 2)
+    stdy = Button(option,text="Study a set",font=("Times",15),command=studySet)
+    stdy.grid(row = 3, column= 1)
 def mainpg():
     root.title("Flashcards")
     root.geometry('500x500')
