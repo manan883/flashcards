@@ -85,7 +85,7 @@ def appendO():
             f = open(fn,"a")
             addQuestions(name)
 def studySet():
-    name = tkinter.simpledialog.askstring(prompt="Enter the name of the set you want to study")
+    name = tkinter.simpledialog.askstring(title="",prompt="Enter the name of the set you want to study")
     try:
         fn = name + "_data.txt"
         f = open(fn,"r")
@@ -101,20 +101,21 @@ def studySet():
         tkinter.messagebox.showinfo(title="Flashcards",message="The questions will show up one at a time")
         for i in arr:
             temp = i.split(",")
+            #do a continue to answer with the one button 
+            quet = tkinter.messagebox.showinfo(title="",message=("Question\n" + temp[0] + "\nPress Ok to view the answer"))
+            if quet == "ok":
+                m = universalD[temp[0]] + "\nContinue?"
+                yesno = tkinter.messagebox.askyesno(title="",message=m)
+            
             #do a yes no and on the bottom ask the user to continue 
-            yesno = tkinter.messagebox.askyesno(title="Questions",message=("Question\n" + temp[0] + "\nDo you wish to continue"))
-            if yesno == True:
-                pass
-            elif yesno == False:
+            # yesno = tkinter.messagebox.askyesno(title="Questions",message=("Question\n" + temp[0] + "\nDo you wish to continue"))
+            if yesno == False:
                 break
-            print("Question:",temp[0])
-            inp = input()
-            match inp.upper():
-                case "Q":
-                    break
-                case _:
-                    pass
-            print("The answer to:",temp[0],"is",universalD[temp[0]])
+            # m = universalD[temp[0]]
+            # tkinter.messagebox.showinfo(title="",message=m)
+            # print("The answer to:",temp[0],"is",universalD[temp[0]])
+        else:
+            tkinter.messagebox.showinfo(title="",message="Set complete")
     except:
         print("Set does not exist, would you like to make a new set with this name? Y/N ")
         usi = input()
